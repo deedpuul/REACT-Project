@@ -37,14 +37,14 @@ const App = () => {
 
             console.log(response)
             if(!response.ok){
-                console.log('error axa')
+                console.log('error occured');
                 throw new Error('Failed to fetch movies');
             }
             const data = await response.json();
-            console.log(data)
+            // console.log(data)
 
             if(data.Response === 'false'){
-                console.log(data)
+
                 setErrorMessage(data.Error || 'failed to fetch movies');
                 setMovielist([]);
                 return;
