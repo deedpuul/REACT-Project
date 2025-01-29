@@ -1,40 +1,63 @@
 import Search from "./componentns/Search.tsx";
-import {useState, useEffect, ReactNode} from "react";
+import {useState, useEffect, } from "react";
+import Spinner from "./componentns/Spinner.tsx";
 
-// API - Application programming Interface - a set of rules that allows one software application to talk to another
+
 const API_BASE_URL= 'https://api.themoviedb.org/3';
 
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const API_KEY = import.meta.env.TMDB_API_KEY;
 
-const API_OPTIONS = {
-    method:'GET',
-    headers:{
-        accept: 'application/json',
-        Authorization: `Bearer  ${API_KEY}`
+const headers = {
+    accept: 'application/json',
+    Authorization: `Bearer ${API_KEY}`,
+};
 
-    }
 
-}
 
-function P(props: { className: string, children: ReactNode }) {
-    return null;
-}
 
 const App = () => {
     const [searchTerm, setsearchTerm] = useState<string>('');
 
     const [errorMessage, setErrorMessage] = useState<string>("");
 
+    const [movieList, setMovielist] =useState([]);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+
+
     const fetchMovies = async()=>{
+        setIsLoading(true);
+        setErrorMessage('');
 
         try{
             const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
-            const response = await fetch(endpoint,API_OPTIONS);
+            const response = await fetch(endpoint, {headers})
+
+            console.log(response)
+            if(!response.ok){
+                console.log('error axa')
+                throw new Error('Failed to fetch movies');
+            }
+            const data = await response.json();
+            console.log(data)
+
+            if(data.Response === 'false'){
+                console.log(data)
+                setErrorMessage(data.Error || 'failed to fetch movies');
+                setMovielist([]);
+                return;
+            }
+setMovielist((data.results))
         }catch(error){
             console.log(`Error fetching movies. ${error}`);
         setErrorMessage("Error fetcing movies. pLease tyr again later");
         }
+        finally{
+            setIsLoading(false);
+    }
+
     }
 
     useEffect(()=>{
@@ -56,9 +79,23 @@ const App = () => {
             </header>
 
         <section className={'all-movies'}>
-            <h2>All MOvies</h2>
+            <h2 className={"mt-[40px]"}>All MOvies</h2>
 
-            {errorMessage && <P className={'text-red-500'}>{errorMessage}</P>}
+            {/*{errorMessage && <P className={'text-red-500'}>{errorMessage}</P>}*/}
+            {isLoading ? (
+                <Spinner/>
+            ) :
+            errorMessage ? (
+                <p className={'text-red-500'}>{errorMessage}</p>
+            ) :
+                (
+                    <ul>
+                        {movieList.map((movie)=>(
+                            <p key ={movie.id} className={'text-white'}>{movie.title}</p>
+                        ))}
+                    </ul>
+                )}
+
         </section>
 
            </div>

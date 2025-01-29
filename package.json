@@ -1,5 +1,5 @@
 {
-  "name": "appwrite",
+  "name": "movie-site",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.0",
+    "axios": "^1.7.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^4.0.0"
