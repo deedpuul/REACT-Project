@@ -7,10 +7,6 @@ const API_BASE_URL= 'https://api.themoviedb.org/3';
 
 const API_KEY = import.meta.env.TMDB_API_KEY;
 
-const headers = {
-    accept: 'application/json',
-    Authorization: `Bearer ${API_KEY}`,
-};
 
 
 
@@ -33,8 +29,17 @@ const App = () => {
         try{
             const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
-            const response = await fetch(endpoint, {headers})
+            // const response = await fetch(endpoint, {headers})
 
+            const headers = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${API_KEY}`,
+                }
+            };
+
+const response = await fetch(endpoint, headers);
             console.log(response)
             if(!response.ok){
                 console.log('error occured');
