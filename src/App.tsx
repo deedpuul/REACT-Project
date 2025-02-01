@@ -1,6 +1,7 @@
 import Search from "./componentns/Search.tsx";
 import { useState, useEffect, useCallback } from "react";
 import Spinner from "./componentns/Spinner.tsx";
+import Moviecard from "./componentns/Moviecard.tsx";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -8,7 +9,12 @@ const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 interface Movie {
   id: number;
   title: string;
+  vote_average: number;
+  poster_path: string;
+  release_date: string;
+  original_language: string;
 }
+
 
 const App = () => {
   const [searchTerm, setsearchTerm] = useState<string>("");
@@ -36,6 +42,7 @@ const App = () => {
       if (!response.ok) {
         throw new Error("Failed to fetch movies");
       }
+
       const data = await response.json();
       console.log(data);
 
@@ -47,7 +54,7 @@ const App = () => {
       setMovielist(data.results);
     } catch (error) {
       console.log(`Error fetching movies. ${error}`);
-      setErrorMessage("Error fetcing movies. pLease tyr again later");
+      setErrorMessage("Error fetcing movies. pLease try again later");
     } finally {
       setIsLoading(false);
     }
@@ -81,9 +88,10 @@ const App = () => {
           ) : (
             <ul>
               {movieList.map((movie) => (
-                <p key={movie.id} className={"text-white"}>
-                  {movie.title}
-                </p>
+                
+                <Moviecard key={movie.id} movie={movie}/>
+                
+                
               ))}
             </ul>
           )}
