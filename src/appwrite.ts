@@ -52,16 +52,16 @@ try{
 }
 
 }
-export const getTrendingMovies = async (): Promise<TrendingMovie[]> => {
-    try {
-        const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
+export const getTrendingMovies = async ()=>{
+    try{
+        const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID,[
             Query.limit(5),
             Query.orderDesc("count")
-        ]);
-        return result.documents as TrendingMovie[];
+        ])
+        return result.documents;
     }
-    catch(error) {
+    catch(error){
         console.log(error);
-        return [];  // Return empty array instead of undefined
     }
+
 }
