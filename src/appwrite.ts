@@ -1,4 +1,4 @@
-import { Client, Databases, ID, Query } from "appwrite";
+import { Client, Databases, ID, Query, Models } from "appwrite";
 
 const DATABASE_ID = import.meta.env.VITE_APPRWRITE_DATABASE_ID;
 const COLLECTION_ID = import.meta.env.VITE_APPRWRITE_COLLECTION_ID;
@@ -19,11 +19,11 @@ interface Movie {
     original_language: string;
   }
 
-interface TrendingMovie {
-    $id: string;
+interface TrendingMovie extends Models.Document {
     title: string;
     poster_url: string;
     count: number;
+    searchTerm: string;
 }
 
 export const updateSearchCount = async(searchTerm: string, movie: Movie) => {
@@ -52,16 +52,16 @@ try{
 }
 
 }
-export const getTrendingMovies = async ()=>{
-    try{
-        const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID,[
+export const getTrendingMovies = async (): Promise<TrendingMovie[]> => {
+    try {
+        const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
             Query.limit(5),
             Query.orderDesc("count")
-        ])
-        return result.documents;
+        ]);
+        return result.documents as TrendingMovie[];
     }
-    catch(error){
+    catch(error) {
         console.log(error);
+        return [];
     }
-
 }
